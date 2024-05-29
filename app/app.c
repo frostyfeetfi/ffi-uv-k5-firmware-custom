@@ -1004,8 +1004,13 @@ static void CheckKeys(void)
 		else
 			gPttDebounceCounter = 0;
 	}
-	else if (!GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT) && !SerialConfigInProgress() && !gEeprom.KEY_LOCK)
+	else if (!GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT) && !SerialConfigInProgress())
 	{	// PTT pressed
+		if (gEeprom.KEY_LOCK)
+		{
+			return;
+		}
+
 		if (++gPttDebounceCounter >= 3)	    // 30ms
 		{	// start transmitting
 			boot_counter_10ms   = 0;
